@@ -1,0 +1,46 @@
+# ---------- Secrets ----------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keypair.json
+id.json
+secrets/
+.secrets/
+
+# ---------- Node ----------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+.yarn/
+
+# ---------- Hardhat / EVM ----------
+cache/
+artifacts/
+coverage/
+coverage.json
+typechain/
+typechain-types/
+
+# ---------- Anchor / Solana ----------
+.anchor/
+target/
+test-ledger/
+**/*.rs.bk
+
+# ---------- OS / Editor ----------
+.DS_Store
+__MACOSX/
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---------- Misc ----------
+*.log
+.cache/
+tmp/
