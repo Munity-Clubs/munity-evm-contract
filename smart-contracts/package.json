@@ -1,0 +1,28 @@
+{
+  "name": "munity-evm",
+  "version": "0.1.0",
+  "description": "Munity EVM port — ERC1155 + ERC2981 community NFT contract.",
+  "license": "MIT",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "local": "npx hardhat run scripts/maindeploy.js --network localhost",
+    "deploy:sepolia": "npx hardhat run scripts/maindeploy.js --network sepolia",
+    "deploy:bscTestnet": "npx hardhat run scripts/maindeploy.js --network bscTestnet",
+    "deploy:bsc": "npx hardhat run scripts/maindeploy.js --network bsc",
+    "deploy:mainnet": "npx hardhat run scripts/maindeploy.js --network mainnet"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@openzeppelin/contracts": "^5.0.2",
+    "chai": "^4.3.10",
+    "dotenv": "^16.4.5",
+    "ethers": "^5.7.2",
+    "hardhat-contract-sizer": "^2.10.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "hardhat": "^2.22.0"
+  }
+}
