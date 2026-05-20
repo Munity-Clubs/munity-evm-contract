@@ -19,6 +19,9 @@ error PriceCantBeZero();
 /// @notice Error thrown when a zero supply is set for a community or item.
 error SupplyCantBeZero();
 
+/// @notice Error thrown when a zero purchase amount is provided.
+error AmountCantBeZero();
+
 /// @notice Error thrown when an invalid discount rate is provided.
 error InvalidDiscount();
 
@@ -43,7 +46,7 @@ error CommunityNotRegistered();
 /// @notice Error thrown when the platform fee is set above the allowed maximum.
 error FeeTooHigh(uint256 _max);
 
-contract  Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
+contract Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
 
     /// @notice Represents a community with specific attributes including pricing and whitelist.
     /// @dev Stores details about each community including its price, discount rate, creator, URI, and a whitelist.
@@ -131,10 +134,10 @@ contract  Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
     /// @notice Fallback function to accept Ether payments.
     receive() external payable { }
 
-    /// @notice Constructor to initialize the  Munity contract with default values.
+    /// @notice Constructor to initialize the Munity contract with default values.
     /// @dev Sets up contract with initial settings including name, symbol, and platform fee recipient.
     constructor() ERC1155("") Ownable(_msgSender()) {
-        _name = " Munity";
+        _name = "Munity";
         _symbol = "MU";
         communityFee = 36;
     }
@@ -146,6 +149,7 @@ contract  Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
     function buy(uint256 _id, uint256 _amount) external payable nonReentrant {
        (uint256 price, uint256 supply, uint256 discount, address creator) = getCommunityDetails(_id);
         if(price == 0) revert CommunityNotRegistered();
+        if(_amount == 0) revert AmountCantBeZero();
         address sender = _msgSender();
         if(_mintings[sender][_id] + _amount > LIMIT) revert LimitExceeded(LIMIT);
         if(_amount > supply) revert NotEnoughSupply(supply);
@@ -166,9 +170,10 @@ contract  Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
         // Effects: update all state before any external calls.
         _communities[_id].supply -= _amount;
         _mintings[sender][_id] += _amount;
+        _mint(sender, _id, _amount, "");
         emit ItemBought(_id, sender, _amount);
 
-        // Interactions: ETH transfers, then mint (which may invoke a recipient hook).
+        // Interactions: ETH transfers happen after all state and token effects.
         if(payToCreator > 0) {
             (bool success, ) = payable(creator).call{value: payToCreator}("");
             if(!success) revert TransferFailed();
@@ -181,8 +186,6 @@ contract  Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
             (bool success, ) = payable(sender).call{value: amountToBeReturn}("");
             if(!success) revert TransferFailed();
         }
-
-        _mint(sender, _id, _amount, "");
     }
 
     /// @notice Registers a new community with specified price, discount, and URI.
@@ -366,4 +369,3 @@ contract  Munity is ERC1155, ERC2981, Ownable, ReentrancyGuard {
     }
 
 }
- 
