@@ -1,5 +1,11 @@
 # Munity EVM Smart Contract
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
+[![Verified: Ethereum](https://img.shields.io/badge/Ethereum-Sourcify%20Exact%20Match-green?style=flat-square)](https://etherscan.io/address/0x55c31189539606D5b1Cb61d01D34E9180fca4941)
+[![Verified: Polygon](https://img.shields.io/badge/Polygon-Sourcify%20Exact%20Match-green?style=flat-square)](https://polygonscan.com/address/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db)
+[![Security Policy](https://img.shields.io/badge/security-policy-blue?style=flat-square)](./SECURITY.md)
+[![Handoff](https://img.shields.io/badge/handoff-doc-green?style=flat-square)](./HANDOFF.md)
+
 This repository contains Munity's EVM community NFT contract work.
 
 ## Active project
