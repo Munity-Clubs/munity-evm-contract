@@ -4,7 +4,11 @@
 
 ## What this is
 
-The Munity EVM community NFT contract: an ERC-1155 + ERC-2981 contract serving as the EVM rail for Munity Clubs on Ethereum mainnet and Polygon PoS. One contract per chain backs every community on that chain — coins, NFT collections, and tickets all mint through the same audit surface. Hardened vNext source: per-wallet mint limits, fee cap, platform fee split, whitelist discounts, reentrancy protection.
+The Munity EVM community NFT contract: an ERC-1155 + ERC-2981 contract serving as the EVM rail for Munity Clubs across multiple EVM chains. One canonical Solidity source, deployed to every supported chain — same audit surface everywhere.
+
+By design, this is a **minimal NFT primitive**, not the full Munity app surface. It implements per-community pricing, supply, whitelist + discount, platform fee split, and per-wallet mint limits. Features that need richer state (multi-collection-per-community gating, $MUNITY balance-tier discounts, USD-pegged pricing, multisig governance) live in the separate Solana v2 program — that's intentional, see [`deployments/README.md`](./deployments/README.md) "Cross-VM feature parity" for the full breakdown.
+
+Hardened vNext source adds 4 safety improvements over the legacy ETH + Polygon deployments: ReentrancyGuard on `buy()`, checks-effects-interactions ordering, max platform fee cap (10%), and zero-amount purchase rejection. Public ABI is unchanged.
 
 ## Current state (2026-05-26)
 
