@@ -6,16 +6,16 @@
 
 The Munity EVM community NFT contract: an ERC-1155 + ERC-2981 contract serving as the EVM rail for Munity Clubs on Ethereum mainnet and Polygon PoS. One contract per chain backs every community on that chain — coins, NFT collections, and tickets all mint through the same audit surface. Hardened vNext source: per-wallet mint limits, fee cap, platform fee split, whitelist discounts, reentrancy protection.
 
-## Current state (2026-05-24)
+## Current state (2026-05-26)
 
-- **Source location:** `smart-contracts/contracts/munity.sol`
+- **Source location:** `contracts/munity.sol`
 - **License:** MIT (see `LICENSE`)
 - **Compiler:** Solidity 0.8.24
 - **Deployment standard:** ERC-1155 + ERC-2981 (royalty)
 - **Verification:** Sourcify Exact Match on both Ethereum mainnet and Polygon PoS
 - **Stability:** Live contract is stable. Both deployments are operational and used by every Munity Club on EVM.
 - **Experimental:** none in current source.
-- **Open work:** No active engineering. Future enhancements (additional L2 deploys: Base / Optimism / Arbitrum) are tracked under the Munity grant pipeline Round 2 A3.
+- **Open work:** Active L2 expansion (Base 8453, Optimism 10, Arbitrum One 42161) under Round 2 A3 of the Munity grant pipeline. Same hardened vNext source — see `TRIPLE_L2_DEPLOY_HANDOFF_2026-05-26.md` for deploy mechanics.
 
 ## How it fits the Munity stack
 
@@ -31,13 +31,12 @@ The Munity EVM community NFT contract: an ERC-1155 + ERC-2981 contract serving a
 | Ethereum mainnet | [`0x55c31189539606D5b1Cb61d01D34E9180fca4941`](https://etherscan.io/address/0x55c31189539606D5b1Cb61d01D34E9180fca4941) | Sourcify Exact Match, Solidity 0.8.24 |
 | Polygon PoS | [`0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db`](https://polygonscan.com/address/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db) | Sourcify Exact Match, Solidity 0.8.24 |
 
-See `smart-contracts/DEPLOYMENTS.md` for the canonical deployment register.
+See [`DEPLOYMENTS.md`](./DEPLOYMENTS.md) for the canonical deployment register.
 
 ## How to verify
 
 ```bash
-cd smart-contracts
-npm install
+npm ci
 npx hardhat compile
 # Sourcify proof:
 #   - Ethereum: https://etherscan.io/address/0x55c31189539606D5b1Cb61d01D34E9180fca4941#code
@@ -45,8 +44,12 @@ npx hardhat compile
 ```
 
 Source folder layout:
-- `smart-contracts/` — active EVM Hardhat project (the source of truth)
-- `munity/` — legacy Solana/Anchor reference from the original Incubella import. **Do not** use as the Solana source of truth — current Solana v2 work lives in [`Munity-Clubs/Solana-munity-smart-contract`](https://github.com/Munity-Clubs/Solana-munity-smart-contract).
+- `contracts/` — Solidity sources (`munity.sol` + `test/` helpers)
+- `scripts/` — deploy + verification scripts
+- `test/` — Hardhat tests
+- `hardhat.config.js` — networks + verifier config
+
+Current Solana v2 work lives in the separate [`Munity-Clubs/Solana-munity-smart-contract`](https://github.com/Munity-Clubs/Solana-munity-smart-contract) repository — not in this repo.
 
 ## Roadmap pointer
 

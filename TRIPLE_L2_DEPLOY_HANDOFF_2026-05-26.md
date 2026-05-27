@@ -35,10 +35,10 @@ The split exists so a fresh chat opened in this EVM repo doesn't need cross-work
 | 1 | Deploy wallet | `0x30afF336B1a5A1F43Bf8a79BAb7Af67DaCD804ef` (existing EVM signer) |
 | 2 | Funding strategy | User pre-funds all three L2 mainnets + their sepolias up-front before fresh chat starts. You do NOT initiate funding. |
 | 3 | Ownership transfer | **SKIP for A3.** Deployer EOA (`0x30af…04ef`) stays as `owner()` on all new L2 contracts. `transferOwnership` is NOT a deploy step. Ownership target is a deferred decision — track as follow-on, do not block A3 on it. |
-| 4 | Optimizer setting | Keep `optimizer.enabled: false` in `smart-contracts/hardhat.config.js`. Matches live ETH/Polygon source for Sourcify Exact Match. |
+| 4 | Optimizer setting | Keep `optimizer.enabled: false` in `hardhat.config.js`. Matches live ETH/Polygon source for Sourcify Exact Match. |
 | 5 | Deploy order | Base mainnet (8453) → Optimism mainnet (10) → Arbitrum One (42161). Base first = cleanest Coinbase Onchain Summer fit. |
 | 6 | Testnet rehearsals | All three: Base Sepolia → Optimism Sepolia → Arbitrum Sepolia, each before its matching mainnet. |
-| 7 | Webapp wiring | **Out of scope for A3.** After each mainnet deploy verifies, update `smart-contracts/DEPLOYMENTS.md` ONLY. Do NOT touch the webapp's `src/utils/web3/addresses.js`, `MUNITY_CONFIG`, or any frontend file. Webapp integration is a separate user-gated task. |
+| 7 | Webapp wiring | **Out of scope for A3.** After each mainnet deploy verifies, update `DEPLOYMENTS.md` ONLY. Do NOT touch the webapp's `src/utils/web3/addresses.js`, `MUNITY_CONFIG`, or any frontend file. Webapp integration is a separate user-gated task. |
 
 ---
 
@@ -50,11 +50,11 @@ The split exists so a fresh chat opened in this EVM repo doesn't need cross-work
 - **GitHub remote:** `https://github.com/Munity-Clubs/evm-munity-smart-contract` *(GitHub repo name uses the longer `-smart-contract` form; local clone uses the shorter `-contract` form — verify with `git remote -v` before any push work)*
 - **License:** MIT (root `LICENSE`)
 - **Solidity:** 0.8.24, optimizer OFF, EVM target `paris`
-- **Contract source:** `smart-contracts/contracts/munity.sol`
+- **Contract source:** `contracts/munity.sol`
 - **Constructor:** zero-arg — `constructor() ERC1155("") Ownable(_msgSender())`. Deployer becomes `owner()`.
 - **Live `buy()` signature:** `buy(uint256 _id, uint256 _amount)` (matches verified live ETH/Polygon).
-- **Deploy script:** `smart-contracts/scripts/deploy.js` — passes `constructorArguments: []` to `verify:verify`.
-- **Tests:** 9 passing Hardhat tests in `smart-contracts/test/munity.test.js`.
+- **Deploy script:** `scripts/deploy.js` — passes `constructorArguments: []` to `verify:verify`.
+- **Tests:** 9 passing Hardhat tests in `test/munity.test.js`.
 
 ### Live deployments — DO NOT TOUCH
 
@@ -63,7 +63,7 @@ The split exists so a fresh chat opened in this EVM repo doesn't need cross-work
 | Ethereum mainnet | 1 | [`0x55c31189539606D5b1Cb61d01D34E9180fca4941`](https://etherscan.io/address/0x55c31189539606D5b1Cb61d01D34E9180fca4941) | Sourcify Exact Match, Solidity 0.8.24 |
 | Polygon PoS | 137 | [`0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db`](https://polygonscan.com/address/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db) | Sourcify Exact Match, Solidity 0.8.24 |
 
-Authoritative ledger: `smart-contracts/DEPLOYMENTS.md`. These two are the *legacy* compiled bytecode — A3 deploys use the *current hardened source* in this repo. Per grant drafts, flag this distinction explicitly: "same public ABI, same Solidity version, hardened source diff from legacy."
+Authoritative ledger: `DEPLOYMENTS.md`. These two are the *legacy* compiled bytecode — A3 deploys use the *current hardened source* in this repo. Per grant drafts, flag this distinction explicitly: "same public ABI, same Solidity version, hardened source diff from legacy."
 
 ### Target chains
 
@@ -75,7 +75,7 @@ Authoritative ledger: `smart-contracts/DEPLOYMENTS.md`. These two are the *legac
 
 All three are Sourcify-supported. `chainlist.org` already lists them — no chain-registry PR needed.
 
-Hardhat network names in `smart-contracts/hardhat.config.js`: `base`, `baseSepolia`, `optimism`, `optimismSepolia`, `arbitrum`, `arbitrumSepolia`.
+Hardhat network names in `hardhat.config.js`: `base`, `baseSepolia`, `optimism`, `optimismSepolia`, `arbitrum`, `arbitrumSepolia`.
 
 ---
 
@@ -87,13 +87,13 @@ Hardhat network names in `smart-contracts/hardhat.config.js`: `base`, `baseSepol
 - [ ] Fund same wallet on Base Sepolia (faucet, free)
 - [ ] Fund same wallet on Optimism Sepolia (faucet, free)
 - [ ] Fund same wallet on Arbitrum Sepolia (faucet, free)
-- [ ] Confirm `smart-contracts/.env` is populated:
+- [ ] Confirm `.env` is populated:
   - `PRIVATE_KEY` for the deployer wallet
   - `ALCHEMY_API_BASE`, `ALCHEMY_API_OPT`, `ALCHEMY_API_ARB` (mainnet RPC keys)
   - `ALCHEMY_API_BASE_SEPOLIA`, `ALCHEMY_API_OPT_SEPOLIA`, `ALCHEMY_API_ARB_SEPOLIA` (testnet)
   - `BASESCAN_API_KEY`, `OPTIMISTIC_ETHERSCAN_API_KEY`, `ARBISCAN_API_KEY` (verification)
 
-Reference canonical variable list: `smart-contracts/.env.example`.
+Reference canonical variable list: `.env.example`.
 
 The fresh chat should confirm funding + env-var presence as its first sanity check; do NOT auto-proceed if any are missing.
 
@@ -102,7 +102,6 @@ The fresh chat should confirm funding + env-var presence as its first sanity che
 ## Pre-flight (run once at session start, before any deploy)
 
 ```bash
-cd smart-contracts
 npm ci
 npx hardhat test                                              # 9 tests must pass
 npx hardhat compile                                            # ensure clean compile
@@ -123,7 +122,6 @@ Run for **Base → Optimism → Arbitrum One** in that order. Do NOT parallelize
 ### Step A — Testnet rehearsal
 
 ```bash
-cd smart-contracts
 # Replace <testnet> with: baseSepolia | optimismSepolia | arbitrumSepolia
 VERIFY=true npx hardhat run scripts/deploy.js --network <testnet>
 ```
@@ -136,8 +134,8 @@ VERIFY=true npx hardhat run scripts/deploy.js --network <testnet>
   - `buy(id, 1)` with `value` matching the registered price
   - `balanceOf(buyer, id)` to confirm mint
   - `royaltyInfo(id, salePrice)` to confirm ERC2981 returns receiver + bps
-- Append testnet address + tx hash + verification URL under a new "Testnet Rehearsals" section in `smart-contracts/DEPLOYMENTS.md`.
-- Stage with `git add smart-contracts/DEPLOYMENTS.md`. Do NOT commit.
+- Append testnet address + tx hash + verification URL under a new "Testnet Rehearsals" section in `DEPLOYMENTS.md`.
+- Stage with `git add DEPLOYMENTS.md`. Do NOT commit.
 
 ### Step B — Pause + ask user for mainnet OK
 
@@ -146,7 +144,6 @@ Do NOT auto-proceed to mainnet. Wait for explicit user authorization for THIS ch
 ### Step C — Mainnet deploy
 
 ```bash
-cd smart-contracts
 # Replace <mainnet> with: base | optimism | arbitrum
 VERIFY=true npx hardhat run scripts/deploy.js --network <mainnet>
 ```
@@ -162,8 +159,7 @@ VERIFY=true npx hardhat run scripts/deploy.js --network <mainnet>
 - Visit `https://sourcify.dev/#/lookup/<deployed_address>` and confirm chain match.
 - If auto-verification did NOT complete, run:
   ```bash
-  cd smart-contracts
-  npx hardhat verify --network <mainnet> <deployed_address>
+    npx hardhat verify --network <mainnet> <deployed_address>
   ```
 
 ### Step E — Mainnet smoke test
@@ -195,7 +191,7 @@ Add a deployment-detail block below the table with:
 - Verification URLs (explorer + Sourcify)
 - Bytecode hash (from pre-flight `shasum`)
 
-Stage with `git add smart-contracts/DEPLOYMENTS.md`. Do NOT commit — surface a commit-ready summary to user and let them run the commit.
+Stage with `git add DEPLOYMENTS.md`. Do NOT commit — surface a commit-ready summary to user and let them run the commit.
 
 ### Step G — Hand off to webapp repo for grant draft
 
@@ -211,17 +207,17 @@ Then loop back to Step A for the next chain.
 ## Files this session may modify
 
 Whitelist:
-- `smart-contracts/DEPLOYMENTS.md` — testnet rehearsals + mainnet rows
-- `smart-contracts/.env` — local only, gitignored, no commits
+- `DEPLOYMENTS.md` — testnet rehearsals + mainnet rows
+- `.env` — local only, gitignored, no commits
 
 DO NOT touch:
-- `smart-contracts/contracts/munity.sol` — source is locked for this deploy series
-- `smart-contracts/scripts/deploy.js` — deploy script is locked
-- `smart-contracts/hardhat.config.js` — network config is locked (optimizer stays off)
-- `smart-contracts/test/munity.test.js` — tests are locked
-- `smart-contracts/package.json` / `package-lock.json` — deps are pinned
+- `contracts/munity.sol` — source is locked for this deploy series
+- `scripts/deploy.js` — deploy script is locked
+- `hardhat.config.js` — network config is locked (optimizer stays off)
+- `test/munity.test.js` — tests are locked
+- `package.json` / `package-lock.json` — deps are pinned
 - `HANDOFF.md` (top-level) — orientation doc, not deploy-specific
-- Any file outside `smart-contracts/DEPLOYMENTS.md`
+- Any file outside `DEPLOYMENTS.md`
 
 If you find yourself wanting to modify any locked file, STOP and surface to user. Source/config drift mid-deploy-series breaks the "same hardened source across all 5 chains" grants narrative.
 
@@ -242,7 +238,7 @@ If you find yourself wanting to modify any locked file, STOP and surface to user
 |---|---|---|
 | THIS file | `evm-munity-contract/TRIPLE_L2_DEPLOY_HANDOFF_2026-05-26.md` | Deploy mechanics, locked answers, hard rules |
 | HANDOFF.md | `evm-munity-contract/HANDOFF.md` | General repo orientation (audience: collaborators, auditors, grant reviewers) |
-| DEPLOYMENTS.md | `evm-munity-contract/smart-contracts/DEPLOYMENTS.md` | Canonical deployment ledger (gets appended after each deploy) |
+| DEPLOYMENTS.md | `evm-munity-contract/DEPLOYMENTS.md` | Canonical deployment ledger (gets appended after each deploy) |
 | A3 grants handoff | `munity-full-stack/fullstack-/docs/grants/A3_TRIPLE_L2_HANDOFF_2026-05-25.md` | Grant draft templates + master-tracker integration |
 | Master tracker | `munity-full-stack/fullstack-/docs/grants/ROUND_1.5_TO_R2_MASTER_2026-05-23.md` | Round 2 progress checklist — A3 rows live there |
 
@@ -261,7 +257,7 @@ Working directory: /Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNI
 Read these files first, in this order:
   1. TRIPLE_L2_DEPLOY_HANDOFF_2026-05-26.md (this repo) — deploy mechanics, locked answers, hard rules
   2. HANDOFF.md (this repo) — general orientation
-  3. smart-contracts/DEPLOYMENTS.md — current deployment ledger
+  3. DEPLOYMENTS.md — current deployment ledger
 
 Then read for grant-narrative context (cross-workspace):
   4. /Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNITY VSCODE REPO/munity-full-stack/fullstack-/docs/grants/A3_TRIPLE_L2_HANDOFF_2026-05-25.md
@@ -286,7 +282,7 @@ Locked answers (settled 2026-05-26):
   Webapp wiring:        OUT OF SCOPE — DEPLOYMENTS.md only this session
 
 Ground truth (verified 2026-05-26):
-  Source: smart-contracts/contracts/munity.sol, Solidity 0.8.24, optimizer OFF
+  Source: contracts/munity.sol, Solidity 0.8.24, optimizer OFF
   Constructor: zero-arg, deployer becomes owner
   buy() signature: buy(uint256 _id, uint256 _amount) — matches live
   Tests: 9 passing Hardhat tests
@@ -295,7 +291,7 @@ Ground truth (verified 2026-05-26):
   All three Sourcify-supported
 
 First action:
-  cd smart-contracts && npm ci && npx hardhat test && npx hardhat compile
+  npm ci && npx hardhat test && npx hardhat compile
   Then: shasum -a 256 artifacts/contracts/munity.sol/Munity.json (record hash)
   Then: git remote -v && git status && git config user.email
   Report pre-flight results. Do NOT proceed past pre-flight without user OK.

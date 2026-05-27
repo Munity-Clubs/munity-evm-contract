@@ -10,13 +10,12 @@ Do not open a public issue with exploit details, private keys, API keys, or user
 
 In scope:
 
-- `smart-contracts/contracts/munity.sol`
-- Deployment and verification scripts under `smart-contracts/scripts/`
-- Hardhat configuration under `smart-contracts/hardhat.config.js`
+- `contracts/munity.sol`
+- Deployment and verification scripts under `scripts/`
+- Hardhat configuration in `hardhat.config.js`
 
 Out of scope:
 
-- The legacy `munity/` Solana reference folder in this repository
 - Third-party RPC, wallet, explorer, or marketplace services
 
 ## Operational Notes

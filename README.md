@@ -6,22 +6,65 @@
 [![Security Policy](https://img.shields.io/badge/security-policy-blue?style=flat-square)](./SECURITY.md)
 [![Handoff](https://img.shields.io/badge/handoff-doc-green?style=flat-square)](./HANDOFF.md)
 
-This repository contains Munity's EVM community NFT contract work.
+Hardhat project for the Munity EVM community NFT contract.
 
-## Active project
+The contract implements ERC1155 community keys with ERC2981 royalties, per-community pricing, supply tracking, whitelist discounts, platform fee splitting, per-wallet mint limits, and reentrancy protection.
 
-- `smart-contracts/` - active EVM Hardhat project.
-- `munity/` - legacy Solana/Anchor reference kept from the original Incubella import. It is not the current Munity Solana v2 program and should not be used as the Solana source of truth.
+## Status
 
-Current Solana v2 work lives in the separate Munity smart-contracts repository.
+This source is the hardened EVM vNext contract. It preserves the live `buy(uint256,uint256)` public shape, but it is not byte-for-byte identical to the currently deployed Ethereum and Polygon contracts.
 
-## Readiness
+See [`DEPLOYMENTS.md`](./DEPLOYMENTS.md) before using this source in production.
 
-The active EVM contract is a hardened vNext source: ERC1155 + ERC2981 community keys, platform fee split, whitelist discounts, per-wallet mint limits, fee cap, and reentrancy protection.
+## Setup
 
-See:
+```shell
+npm ci
+```
 
-- `LICENSE` for the MIT license.
-- `smart-contracts/README.md` for setup and commands.
-- `smart-contracts/DEPLOYMENTS.md` for live deployed addresses and verification notes.
-- `SECURITY.md` for disclosure and operational guidance.
+For live deployments, copy `.env.example` to `.env` and fill only the values needed for the target network. Use a dedicated deployer wallet.
+
+## Commands
+
+```shell
+npm run compile
+npm test
+npm run deploy:hardhat
+npm run deploy:local
+npm run deploy:sepolia
+npm run deploy:mainnet
+npm run deploy:polygon
+npm run deploy:amoy
+npm run deploy:base-sepolia
+npm run deploy:base
+npm run deploy:optimism-sepolia
+npm run deploy:optimism
+npm run deploy:arbitrum-sepolia
+npm run deploy:arbitrum
+```
+
+To verify during deployment:
+
+```shell
+VERIFY=true npm run deploy:base-sepolia
+```
+
+## Layout
+
+- `contracts/munity.sol` — production contract source
+- `contracts/test/` — test-only helper contracts
+- `scripts/deploy.js` — deploy-only script with optional verification
+- `scripts/verifyContract.js` — verification helper
+- `test/` — Hardhat tests
+- `DEPLOYMENTS.md` — canonical ledger of live deployments + verification proofs
+- `HANDOFF.md` — one-page orientation for collaborators, auditors, grant reviewers
+- `SECURITY.md` — vulnerability disclosure policy
+
+## Notes
+
+- Solidity compiler: `0.8.24`
+- EVM target: `paris`
+- Optimizer: disabled, matching the verified live-contract metadata style
+- Live Ethereum and Polygon deployments are recorded in [`DEPLOYMENTS.md`](./DEPLOYMENTS.md)
+</content>
+</invoke>

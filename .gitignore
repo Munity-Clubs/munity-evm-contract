@@ -44,3 +44,6 @@ Thumbs.db
 *.log
 .cache/
 tmp/
+
+# ---------- Local-only session notes ----------
+SESSION_SUMMARY_*.md
