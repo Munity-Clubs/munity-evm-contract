@@ -1,0 +1,22 @@
+{
+  "chainName": "Polygon PoS",
+  "chainId": 137,
+  "contractName": "Munity",
+  "address": "0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db",
+  "sourceGeneration": "legacy",
+  "compiler": {
+    "version": "0.8.24",
+    "evmVersion": "paris",
+    "optimizer": false
+  },
+  "abi": {
+    "buy": "buy(uint256 _id, uint256 _amount)",
+    "note": "Full ABI available on the verified Polygonscan page; not bundled here because legacy source is not in this repo."
+  },
+  "verification": {
+    "sourcify": "https://sourcify.dev/#/lookup/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db",
+    "polygonscan": "https://polygonscan.com/address/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db#code",
+    "matchType": "exact"
+  },
+  "notes": "Pre-hardened bytecode. Live since project inception, used by every Munity Club on Polygon PoS. The hardened vNext source in this repo's contracts/munity.sol shares the public buy(uint256,uint256) shape but is not byte-for-byte identical — see deployments/README.md for the source-vs-deployment note."
+}
