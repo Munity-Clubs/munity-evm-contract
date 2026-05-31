@@ -46,8 +46,8 @@ The split exists so a fresh chat opened in this EVM repo doesn't need cross-work
 
 ### Source repo
 
-- **Local path:** `/Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNITY VSCODE REPO/evm-munity-contract/`
-- **GitHub remote:** `https://github.com/Munity-Clubs/evm-munity-smart-contract` *(GitHub repo name uses the longer `-smart-contract` form; local clone uses the shorter `-contract` form — verify with `git remote -v` before any push work)*
+- **Local path:** `/Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNITY VSCODE REPO/evm-munity-contract/` *(local folder rename to `munity-evm-contract` deferred to post-deploy cleanup session)*
+- **GitHub remote:** `https://github.com/Munity-Clubs/munity-evm-contract` *(renamed 2026-05-27 from `evm-munity-smart-contract`; GitHub auto-redirect handles any straggling references; verify with `git remote -v` shows the new URL)*
 - **License:** MIT (root `LICENSE`)
 - **Solidity:** 0.8.24, optimizer OFF, EVM target `paris`
 - **Contract source:** `contracts/munity.sol`
@@ -178,20 +178,71 @@ Do NOT run paid smoke tests without per-chain user OK.
 
 ### Step F — `DEPLOYMENTS.md` update
 
-Append a new row to the "Live Production Contracts" table:
+Per-chain proof now lives in a structured `deployments/<chain>/` folder layer (added 2026-05-27 — see [`deployments/README.md`](./deployments/README.md) for the index + EVM source-generation matrix + cross-VM feature parity matrix). For each new chain deploy, do all of the following:
 
-```markdown
-| Base mainnet | `0x<address>` | Sourcify Exact Match, BaseScan verified | Hardened vNext, deployed YYYY-MM-DD by 0x30af…04ef |
+**F.1 — Create the per-chain folder**
+
+```bash
+mkdir -p deployments/<chain-folder>      # one of: base | optimism | arbitrum-one
 ```
 
-Add a deployment-detail block below the table with:
-- Deployer address
-- Deploy transaction hash
-- Block number
-- Verification URLs (explorer + Sourcify)
-- Bytecode hash (from pre-flight `shasum`)
+**F.2 — Write `deployments/<chain-folder>/address.json`**
 
-Stage with `git add DEPLOYMENTS.md`. Do NOT commit — surface a commit-ready summary to user and let them run the commit.
+Follow the existing schema (see `deployments/ethereum/address.json` for a legacy-contract example; new deploys use `sourceGeneration: "hardened-vNext"` instead of `"legacy"`):
+
+```json
+{
+  "chainName": "Base",
+  "chainId": 8453,
+  "contractName": "Munity",
+  "address": "0x<deployed-address>",
+  "sourceGeneration": "hardened-vNext",
+  "deployer": "0x30afF336B1a5A1F43Bf8a79BAb7Af67DaCD804ef",
+  "deployTx": "0x<tx-hash>",
+  "deployBlock": <block-number>,
+  "deployedAt": "YYYY-MM-DDTHH:MM:SSZ",
+  "compiler": { "version": "0.8.24", "evmVersion": "paris", "optimizer": false },
+  "bytecodeHash": "<shasum from pre-flight>",
+  "verification": {
+    "sourcify": "https://sourcify.dev/#/lookup/0x<deployed-address>",
+    "explorer": "https://basescan.org/address/0x<deployed-address>#code",
+    "matchType": "exact"
+  },
+  "notes": "Hardened vNext source — adds ReentrancyGuard, CEI ordering, max platform fee cap (10%), zero-amount purchase rejection vs. legacy ETH/Polygon. Same public buy(uint256,uint256) ABI."
+}
+```
+
+**F.3 — Write `deployments/<chain-folder>/verification.md`**
+
+Mirror the structure of `deployments/ethereum/verification.md`: verification proofs table (Sourcify + explorer), compiler settings, ABI pointer, `curl` snippet for independent Sourcify check using the new chain ID.
+
+**F.4 — Copy the ABI snapshot**
+
+```bash
+cp artifacts/contracts/munity.sol/Munity.json deployments/<chain-folder>/abi.json
+```
+
+This bundles the canonical ABI alongside the address — gives integrators a frozen artifact tied to this specific deployment.
+
+**F.5 — Update the chain-status table in `deployments/README.md`**
+
+In the "Chain status" table, move this chain's row from "pending" status to live: fill in the address, set Source to "Hardened vNext (this repo)", set Verification to "Sourcify Exact Match · <ExplorerName> ✓", set Folder column to link the new folder.
+
+**F.6 — Update `DEPLOYMENTS.md` at root**
+
+Move this chain's row from the "Pending Deployments" table to the "Live Production Contracts" table. Fill in the same fields. The "Per-chain folder" column links to `deployments/<chain-folder>/`.
+
+**F.7 — Update root `README.md` "Live on" table**
+
+Same pattern — move the chain's row from "pending — Round 2 A3 deploy" to a live entry with the truncated address (`0x<first4>…<last4>`) + link to deployments folder.
+
+**F.8 — Stage**
+
+```bash
+git add deployments/<chain-folder>/ DEPLOYMENTS.md deployments/README.md README.md
+```
+
+Do NOT commit — surface a commit-ready summary to user and let them run the commit. Suggested commit message: `deploy: <chain> mainnet — 0x<first4>…<last4>, Sourcify Exact Match`.
 
 ### Step G — Hand off to webapp repo for grant draft
 
@@ -206,8 +257,13 @@ Then loop back to Step A for the next chain.
 
 ## Files this session may modify
 
-Whitelist:
-- `DEPLOYMENTS.md` — testnet rehearsals + mainnet rows
+Whitelist (per-chain deploy output):
+- `deployments/<chain>/address.json` — create new per deploy (Step F.2)
+- `deployments/<chain>/verification.md` — create new per deploy (Step F.3)
+- `deployments/<chain>/abi.json` — copy from `artifacts/` per deploy (Step F.4)
+- `deployments/README.md` — move chain row from pending → live in chain-status table (Step F.5)
+- `DEPLOYMENTS.md` — move chain row from "Pending Deployments" → "Live Production Contracts" (Step F.6)
+- `README.md` — update "Live on" table (Step F.7)
 - `.env` — local only, gitignored, no commits
 
 DO NOT touch:
@@ -217,9 +273,11 @@ DO NOT touch:
 - `test/munity.test.js` — tests are locked
 - `package.json` / `package-lock.json` — deps are pinned
 - `HANDOFF.md` (top-level) — orientation doc, not deploy-specific
-- Any file outside `DEPLOYMENTS.md`
+- `SECURITY.md` — disclosure policy, not deploy-specific
+- `deployments/ethereum/*` and `deployments/polygon/*` — legacy chain records, locked
+- Anything outside the whitelist above
 
-If you find yourself wanting to modify any locked file, STOP and surface to user. Source/config drift mid-deploy-series breaks the "same hardened source across all 5 chains" grants narrative.
+If you find yourself wanting to modify any locked file, STOP and surface to user. Source/config drift mid-deploy-series breaks the "same hardened source across all new chains" grants narrative.
 
 ---
 
@@ -237,8 +295,10 @@ If you find yourself wanting to modify any locked file, STOP and surface to user
 | Doc | Location | Purpose |
 |---|---|---|
 | THIS file | `evm-munity-contract/TRIPLE_L2_DEPLOY_HANDOFF_2026-05-26.md` | Deploy mechanics, locked answers, hard rules |
-| HANDOFF.md | `evm-munity-contract/HANDOFF.md` | General repo orientation (audience: collaborators, auditors, grant reviewers) |
-| DEPLOYMENTS.md | `evm-munity-contract/DEPLOYMENTS.md` | Canonical deployment ledger (gets appended after each deploy) |
+| HANDOFF.md | `evm-munity-contract/HANDOFF.md` | General repo orientation (minimal NFT primitive framing) |
+| DEPLOYMENTS.md | `evm-munity-contract/DEPLOYMENTS.md` | At-a-glance deploy summary table (live + pending) |
+| `deployments/README.md` | `evm-munity-contract/deployments/README.md` | Chain-status index + EVM source-generation matrix (legacy vs vNext) + cross-VM feature parity matrix (EVM vs Solana v2). **READ THIS BEFORE STEP F per-chain folder work.** |
+| `deployments/ethereum/*` + `deployments/polygon/*` | `evm-munity-contract/deployments/<chain>/` | Reference shape for `address.json` + `verification.md` — copy this pattern for each new chain |
 | A3 grants handoff | `munity-full-stack/fullstack-/docs/grants/A3_TRIPLE_L2_HANDOFF_2026-05-25.md` | Grant draft templates + master-tracker integration |
 | Master tracker | `munity-full-stack/fullstack-/docs/grants/ROUND_1.5_TO_R2_MASTER_2026-05-23.md` | Round 2 progress checklist — A3 rows live there |
 
@@ -256,11 +316,13 @@ Working directory: /Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNI
 
 Read these files first, in this order:
   1. TRIPLE_L2_DEPLOY_HANDOFF_2026-05-26.md (this repo) — deploy mechanics, locked answers, hard rules
-  2. HANDOFF.md (this repo) — general orientation
-  3. DEPLOYMENTS.md — current deployment ledger
+  2. HANDOFF.md (this repo) — general orientation (minimal NFT primitive framing)
+  3. DEPLOYMENTS.md — at-a-glance deploy summary (Live + Pending tables)
+  4. deployments/README.md — chain-status index + source-generation matrix + cross-VM feature parity matrix
+  5. deployments/ethereum/address.json + deployments/ethereum/verification.md — reference shape for the per-chain files you'll create in Step F
 
 Then read for grant-narrative context (cross-workspace):
-  4. /Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNITY VSCODE REPO/munity-full-stack/fullstack-/docs/grants/A3_TRIPLE_L2_HANDOFF_2026-05-25.md
+  6. /Users/mind/Documents/mindmac/Work Space/Projects/MUNITY/MUNITY VSCODE REPO/munity-full-stack/fullstack-/docs/grants/A3_TRIPLE_L2_HANDOFF_2026-05-25.md
 
 ⛔ HARD RULES (re-verify before any action):
   - NEVER run `git commit` (tool-level denied). Stage with `git add` only.
@@ -279,7 +341,16 @@ Locked answers (settled 2026-05-26):
   Optimizer:            keep OFF (matches live ETH/Polygon source)
   Deploy order:         Base → Optimism → Arbitrum One
   Testnet rehearsals:   all three sepolias before each matching mainnet
-  Webapp wiring:        OUT OF SCOPE — DEPLOYMENTS.md only this session
+  Webapp wiring:        OUT OF SCOPE — deployments/<chain>/ + DEPLOYMENTS.md + README.md only this session
+
+Day 2 sanity-check decisions (2026-05-27):
+  - ETH + Polygon stay on legacy bytecode (deferred Option A — keep legacy, add L2s only)
+  - Cross-VM feature parity is intentional split: EVM = minimal NFT primitive,
+    Solana v2 = feature-rich app surface (multi-collection, $MUNITY tiers, Pyth, Squads).
+    Documented in deployments/README.md — don't claim feature parity in any deploy notes.
+  - Linea + Mantle are future scope (§4.9, §4.7 grant pipelines), not today.
+  - GitHub repo renamed evm-munity-smart-contract → munity-evm-contract (2026-05-27);
+    git remote already updated, auto-redirect handles straggling old URLs.
 
 Ground truth (verified 2026-05-26):
   Source: contracts/munity.sol, Solidity 0.8.24, optimizer OFF
@@ -294,7 +365,20 @@ First action:
   npm ci && npx hardhat test && npx hardhat compile
   Then: shasum -a 256 artifacts/contracts/munity.sol/Munity.json (record hash)
   Then: git remote -v && git status && git config user.email
+    (remote should show munity-evm-contract; if it shows evm-munity-smart-contract,
+     either the rename hasn't propagated to local clone yet OR a stale URL — flag to user)
   Report pre-flight results. Do NOT proceed past pre-flight without user OK.
   Confirm user has pre-funded the three L2 mainnets + three sepolias before
   asking for the first deploy OK.
+
+Per-chain output (Step F, do all of F.1–F.8 for each chain):
+  1. Create deployments/<chain>/ folder (base | optimism | arbitrum-one)
+  2. Write deployments/<chain>/address.json (schema in handoff Step F.2)
+  3. Write deployments/<chain>/verification.md (mirror deployments/ethereum/verification.md)
+  4. Copy artifacts/contracts/munity.sol/Munity.json → deployments/<chain>/abi.json
+  5. Update deployments/README.md chain-status table (pending → live)
+  6. Update DEPLOYMENTS.md (Pending Deployments → Live Production Contracts)
+  7. Update root README.md "Live on" table
+  8. git add deployments/<chain>/ DEPLOYMENTS.md deployments/README.md README.md
+     Then surface commit-ready summary to user (NEVER commit yourself).
 ````
