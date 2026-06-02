@@ -16,7 +16,7 @@ The contract implements ERC1155 community keys with ERC2981 royalties, per-commu
 |---|---|---|
 | Ethereum mainnet (1) | [`0x55c3…4941`](https://etherscan.io/address/0x55c31189539606D5b1Cb61d01D34E9180fca4941) | Sourcify Exact Match · [details](./deployments/ethereum/) |
 | Polygon PoS (137) | [`0xaF02…08db`](https://polygonscan.com/address/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db) | Sourcify Exact Match · [details](./deployments/polygon/) |
-| Base (8453) | *pending — Round 2 A3 deploy* | — |
+| Base (8453) | [`0x6c60…2083`](https://base.blockscout.com/address/0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083) | Sourcify Exact Match · [details](./deployments/base/) |
 | Optimism (10) | *pending — Round 2 A3 deploy* | — |
 | Arbitrum One (42161) | *pending — Round 2 A3 deploy* | — |
 
@@ -78,5 +78,3 @@ VERIFY=true npm run deploy:base-sepolia
 - EVM target: `paris`
 - Optimizer: disabled, matching the verified live-contract metadata style
 - Live Ethereum and Polygon deployments are recorded in [`DEPLOYMENTS.md`](./DEPLOYMENTS.md)
-</content>
-</invoke>

@@ -10,7 +10,7 @@ The canonical contract source is at [`contracts/munity.sol`](../contracts/munity
 |---|---|---|---|---|---|
 | Ethereum mainnet | 1 | [`0x55c31189539606D5b1Cb61d01D34E9180fca4941`](https://etherscan.io/address/0x55c31189539606D5b1Cb61d01D34E9180fca4941) | Legacy (pre-hardened) | Sourcify Exact Match · Etherscan ✓ | [`ethereum/`](./ethereum/) |
 | Polygon PoS | 137 | [`0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db`](https://polygonscan.com/address/0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db) | Legacy (pre-hardened) | Sourcify Exact Match · Polygonscan ✓ | [`polygon/`](./polygon/) |
-| Base | 8453 | *pending — Round 2 A3 deploy* | Hardened vNext (this repo) | *pending* | — |
+| Base | 8453 | [`0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083`](https://base.blockscout.com/address/0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083) | Hardened vNext (this repo) | Sourcify Exact Match · Base Blockscout ✓ | [`base/`](./base/) |
 | Optimism | 10 | *pending — Round 2 A3 deploy* | Hardened vNext (this repo) | *pending* | — |
 | Arbitrum One | 42161 | *pending — Round 2 A3 deploy* | Hardened vNext (this repo) | *pending* | — |
 | Linea | 59144 | *future — §4.9 grant pipeline* | Hardened vNext (this repo) | *pending* | — |

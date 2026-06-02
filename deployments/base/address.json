@@ -1,0 +1,19 @@
+{
+  "chainName": "Base",
+  "chainId": 8453,
+  "contractName": "Munity",
+  "address": "0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083",
+  "sourceGeneration": "hardened-vNext",
+  "deployer": "0x30afF336B1a5A1F43Bf8a79BAb7Af67DaCD804ef",
+  "deployTx": "0xc903728bf3990e796cdb7bd676962cbcfac33e751fe07054955097a546443439",
+  "deployBlock": 46814689,
+  "deployedAt": "2026-06-02T16:45:25Z",
+  "compiler": { "version": "0.8.24", "evmVersion": "paris", "optimizer": false },
+  "bytecodeHash": "a118ff6c6d972615df97b91f05d81245c12d57d565a43a367a22a62ee3ab5b57",
+  "verification": {
+    "sourcify": "https://sourcify.dev/#/lookup/0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083",
+    "explorer": "https://base.blockscout.com/address/0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083#code",
+    "matchType": "exact"
+  },
+  "notes": "Hardened vNext source — adds ReentrancyGuard, CEI ordering, max platform fee cap (10%), zero-amount purchase rejection vs. legacy ETH/Polygon. Same public buy(uint256,uint256) ABI. Verified Sourcify Exact Match (runtime + creation) and on Base Blockscout. Bytecode hash is the shasum-256 of the build artifact (artifacts/contracts/munity.sol/Munity.json) recorded at pre-flight."
+}

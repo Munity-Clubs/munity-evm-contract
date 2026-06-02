@@ -8,8 +8,9 @@ At-a-glance summary of every chain where the Munity EVM contract is live. For fu
 | --- | --- | --- | --- | --- | --- |
 | Ethereum mainnet | 1 | `0x55c31189539606D5b1Cb61d01D34E9180fca4941` | Legacy (pre-hardened) | Sourcify Exact Match · Etherscan ✓ | [`deployments/ethereum/`](./deployments/ethereum/) |
 | Polygon PoS | 137 | `0xaF02eFB0a310FAd8C3Af3F01EB50EddF966908db` | Legacy (pre-hardened) | Sourcify Exact Match · Polygonscan ✓ | [`deployments/polygon/`](./deployments/polygon/) |
+| Base | 8453 | `0x6c60642F9e6c4C203ae984c34C0a10D77c3f2083` | Hardened vNext (this repo) | Sourcify Exact Match · Base Blockscout ✓ | [`deployments/base/`](./deployments/base/) |
 
-Both live contracts expose `buy(uint256 _id, uint256 _amount)`.
+All live contracts expose `buy(uint256 _id, uint256 _amount)`.
 
 ## Pending Deployments
 
@@ -17,7 +18,6 @@ These chains have config wired in [`hardhat.config.js`](./hardhat.config.js) and
 
 | Chain | Chain ID | Status | Grant pipeline |
 | --- | --- | --- | --- |
-| Base | 8453 | Round 2 A3 deploy — config ready, gas funding pending | §4.8 Base Builder Grants + §4.15 Coinbase Onchain Summer |
 | Optimism | 10 | Round 2 A3 deploy — config ready, gas funding pending | §4.16 Optimism Mission Grants |
 | Arbitrum One | 42161 | Round 2 A3 deploy — config ready, gas funding pending | §4.12 Arbitrum Foundation Grants |
 | Linea | 59144 | Future — config not yet added to hardhat.config.js | §4.9 Linea Consortium Fund Identity Track |
