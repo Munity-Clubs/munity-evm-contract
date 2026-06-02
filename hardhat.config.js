@@ -83,18 +83,22 @@ module.exports = {
       accounts,
     },
   },
+  // Verification config — Blockscout for A3 L2 chains (Base/OP/Arb),
+  // Etherscan-family kept for ETH + Polygon (legacy chains, not part of A3).
+  // hardhat-verify 2.x uses the `etherscan` block name even when pointing at
+  // Blockscout — Blockscout's API is Etherscan-API-compatible by design.
   etherscan: {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY || "",
       sepolia: process.env.ETHERSCAN_API_KEY || "",
       polygon: process.env.POLYGONSCAN_API_KEY || "",
       polygonAmoy: process.env.POLYGONSCAN_API_KEY || "",
-      base: process.env.BASESCAN_API_KEY || "",
-      baseSepolia: process.env.BASESCAN_API_KEY || "",
-      optimisticEthereum: process.env.OPTIMISTIC_ETHERSCAN_API_KEY || "",
-      optimismSepolia: process.env.OPTIMISTIC_ETHERSCAN_API_KEY || "",
-      arbitrumOne: process.env.ARBISCAN_API_KEY || "",
-      arbitrumSepolia: process.env.ARBISCAN_API_KEY || "",
+      base: process.env.BLOCKSCOUT_API_KEY || "",
+      baseSepolia: process.env.BLOCKSCOUT_API_KEY || "",
+      optimisticEthereum: process.env.BLOCKSCOUT_API_KEY || "",
+      optimismSepolia: process.env.BLOCKSCOUT_API_KEY || "",
+      arbitrumOne: process.env.BLOCKSCOUT_API_KEY || "",
+      arbitrumSepolia: process.env.BLOCKSCOUT_API_KEY || "",
     },
     customChains: [
       {
@@ -105,52 +109,53 @@ module.exports = {
           browserURL: "https://amoy.polygonscan.com",
         },
       },
+      // Blockscout instances for A3 L2 chains
       {
         network: "base",
         chainId: 8453,
         urls: {
-          apiURL: "https://api.basescan.org/api",
-          browserURL: "https://basescan.org",
+          apiURL: "https://base.blockscout.com/api",
+          browserURL: "https://base.blockscout.com",
         },
       },
       {
         network: "baseSepolia",
         chainId: 84532,
         urls: {
-          apiURL: "https://api-sepolia.basescan.org/api",
-          browserURL: "https://sepolia.basescan.org",
+          apiURL: "https://base-sepolia.blockscout.com/api",
+          browserURL: "https://base-sepolia.blockscout.com",
         },
       },
       {
         network: "optimisticEthereum",
         chainId: 10,
         urls: {
-          apiURL: "https://api-optimistic.etherscan.io/api",
-          browserURL: "https://optimistic.etherscan.io",
+          apiURL: "https://optimism.blockscout.com/api",
+          browserURL: "https://optimism.blockscout.com",
         },
       },
       {
         network: "optimismSepolia",
         chainId: 11155420,
         urls: {
-          apiURL: "https://api-sepolia-optimistic.etherscan.io/api",
-          browserURL: "https://sepolia-optimistic.etherscan.io",
+          apiURL: "https://optimism-sepolia.blockscout.com/api",
+          browserURL: "https://optimism-sepolia.blockscout.com",
         },
       },
       {
         network: "arbitrumOne",
         chainId: 42161,
         urls: {
-          apiURL: "https://api.arbiscan.io/api",
-          browserURL: "https://arbiscan.io",
+          apiURL: "https://arbitrum.blockscout.com/api",
+          browserURL: "https://arbitrum.blockscout.com",
         },
       },
       {
         network: "arbitrumSepolia",
         chainId: 421614,
         urls: {
-          apiURL: "https://api-sepolia.arbiscan.io/api",
-          browserURL: "https://sepolia.arbiscan.io",
+          apiURL: "https://arbitrum-sepolia.blockscout.com/api",
+          browserURL: "https://arbitrum-sepolia.blockscout.com",
         },
       },
     ],
