@@ -6,9 +6,9 @@
 [![Security Policy](https://img.shields.io/badge/security-policy-blue?style=flat-square)](./SECURITY.md)
 [![Handoff](https://img.shields.io/badge/handoff-doc-green?style=flat-square)](./HANDOFF.md)
 
-Hardhat project for the Munity EVM community NFT contract. One canonical Solidity source, deployed across multiple EVM chains.
+Hardhat project for the Munity EVM Club NFT contract. One canonical Solidity source, deployed across multiple EVM chains.
 
-The contract implements ERC1155 community keys with ERC2981 royalties, per-community pricing, supply tracking, whitelist discounts, platform fee splitting, per-wallet mint limits, and reentrancy protection.
+The contract implements ERC1155 Club keys with ERC2981 royalties, per-community pricing, supply tracking, whitelist discounts, platform fee splitting, per-wallet mint limits, and reentrancy protection.
 
 ## Live on
 
